@@ -62,8 +62,6 @@ class WunderClient:
             headers['Content-Type'] = 'application/json'
         url = '/'.join([API_URL, 'v' + self.api_version, endpoint])
         data = json.dumps(data) if data else None
-        print url
-        print data
         response = requests.request(method=method, url=url, params=params, headers=headers, data=data)
         _validate_response(response)
         return response
@@ -149,8 +147,8 @@ class WunderClient:
                 model.Task.recurrence_count : int(recurrence_count) if recurrence_count else None,
                 model.Task.due_date : due_date,
                 model.Task.starred : starred,
+                model.Task.revision : int(revision),
                 'remove' : remove,
-                'revision' : int(revision),
                 }
         data = { key: value for key, value in data.iteritems() if value is not None }
         endpoint = '/'.join([_Endpoints.tasks, str(task_id)])
@@ -158,8 +156,12 @@ class WunderClient:
         return response.json()
 
     def delete_task(self, task_id, revision):
-        # TODO https://developer.wunderlist.com/documentation/endpoints/task
-        pass
+        params = {
+                model.Task.revision : int(revision),
+                }
+        endpoint = '/'.join([_Endpoints.tasks, str(task_id)])
+        response = self._wunderlist_request(endpoint, 'DELETE', params=params)
+        assert response.status_code == 204
 
 if __name__ == '__main__':
     client = WunderClient(sys.argv[1], sys.argv[2])
