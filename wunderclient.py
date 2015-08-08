@@ -3,6 +3,7 @@ import requests
 import sys
 import json
 import model
+import wunderpy2.exceptions
 
 def _ensure_not_empty(params):
     ''' Check that the values in the given dict of (pretty param name -> value) is not None or empty. '''
@@ -62,7 +63,13 @@ class WunderClient:
             headers['Content-Type'] = 'application/json'
         url = '/'.join([API_URL, 'v' + self.api_version, endpoint])
         data = json.dumps(data) if data else None
-        response = requests.request(method=method, url=url, params=params, headers=headers, data=data)
+        try:
+            response = requests.request(method=method, url=url, params=params, headers=headers, data=data)
+        # TODO Does recreating the exception classes 'requests' use suck? Yes, but it sucks more to expose the underlying library I use
+        except requests.exceptions.TimeoutError as e:
+            raise wunderpy2.exceptions.TimeoutError(e)
+        except requests.exceptions.ConnectionError as e:
+            raise wunderpy2.exceptions.ConnectionError(e)
         _validate_response(response)
         return response
 
