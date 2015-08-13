@@ -1,0 +1,9 @@
+---
+# See Wunderlist API authorization documentation for more info on these variables
+# https://developer.wunderlist.com/documentation/concepts/authorization
+client_id: 
+client_secret: 
+access_token: 
+
+# TODO It'd be nice to have a generator that you point at a Wunderlist instance and it automagically fills all this crap in
+inbox_id: 
