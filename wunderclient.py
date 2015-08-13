@@ -24,10 +24,13 @@ API_URL = 'https://a.wunderlist.com/api'
 MAX_TASK_TITLE_LENGTH = 255
 
 class _Endpoints:
-    tasks = "tasks"
-    lists = "lists"
+    TASKS = "tasks"
+    LISTS = "lists"
+    NOTES = "notes"
+
 
 class WunderClient:
+    # TODO Factor our these methods into subclasses, for easier logical organization
     ''' Client for accessing the Wunderlist info of a user (given by the access token) '''
 
     def __init__(self, access_token, client_id, api_version='1'):
@@ -66,7 +69,7 @@ class WunderClient:
         try:
             response = requests.request(method=method, url=url, params=params, headers=headers, data=data)
         # TODO Does recreating the exception classes 'requests' use suck? Yes, but it sucks more to expose the underlying library I use
-        except requests.exceptions.TimeoutError as e:
+        except requests.exceptions.Timeout as e:
             raise wunderpy2.exceptions.TimeoutError(e)
         except requests.exceptions.ConnectionError as e:
             raise wunderpy2.exceptions.ConnectionError(e)
@@ -75,12 +78,13 @@ class WunderClient:
 
     def get_lists(self):
         ''' Gets all the client's lists '''
-        response = self._wunderlist_request(_Endpoints.lists)
+        response = self._wunderlist_request(_Endpoints.LISTS)
+        assert response.status_code == 200
         return response.json()
 
     def get_list(self, list_id):
         ''' Gets the given list '''
-        endpoint = '/'.join([_Endpoints.lists, str(list_id)])
+        endpoint = '/'.join([_Endpoints.LISTS, str(list_id)])
         response = self._wunderlist_request(endpoint)
         return response.json()
 
@@ -103,12 +107,12 @@ class WunderClient:
     def get_tasks(self, list_id, completed=False):
         ''' Gets un/completed tasks for the given list ID '''
         params = { model.Task.list_id : str(list_id), model.Task.completed : completed }
-        response = self._wunderlist_request(_Endpoints.tasks, params=params)
+        response = self._wunderlist_request(_Endpoints.TASKS, params=params)
         return response.json()
 
     def get_task(self, task_id):
         ''' Gets task information for the given ID '''
-        endpoint = '/'.join([_Endpoints.tasks, str(task_id)])
+        endpoint = '/'.join([_Endpoints.TASKS, int(task_id)])
         response = self._wunderlist_request(endpoint)
         return response.json()
 
@@ -133,7 +137,7 @@ class WunderClient:
                 model.Task.starred : starred,
                 }
         data = { key: value for key, value in data.iteritems() if value is not None }
-        response = self._wunderlist_request(_Endpoints.tasks, 'POST', data=data)
+        response = self._wunderlist_request(_Endpoints.TASKS, 'POST', data=data)
         return response.json()
 
     def update_task(self, task_id, revision, title=None, assignee_id=None, completed=None, recurrence_type=None, recurrence_count=None, due_date=None, starred=None, remove=None):
@@ -158,7 +162,7 @@ class WunderClient:
                 'remove' : remove,
                 }
         data = { key: value for key, value in data.iteritems() if value is not None }
-        endpoint = '/'.join([_Endpoints.tasks, str(task_id)])
+        endpoint = '/'.join([_Endpoints.TASKS, int(task_id)])
         response = self._wunderlist_request(endpoint, 'PATCH', data=data)
         return response.json()
 
@@ -166,9 +170,24 @@ class WunderClient:
         params = {
                 model.Task.revision : int(revision),
                 }
-        endpoint = '/'.join([_Endpoints.tasks, str(task_id)])
+        endpoint = '/'.join([_Endpoints.TASKS, int(task_id)])
         response = self._wunderlist_request(endpoint, 'DELETE', params=params)
         assert response.status_code == 204
+
+    def get_task_notes(self, task_id):
+        params = {
+                model.Task.id : int(task_id)
+                }
+        response = self._wunderlist_request(_Endpoints.NOTES, params=params)
+        return response.json()
+
+    def get_list_notes(self, list_id):
+        params = {
+                model.List.id : int(list_id)
+                }
+        response = self._wunderlist_request(_Endpoints.NOTES, params=params)
+        return response.json()
+
 
 if __name__ == '__main__':
     client = WunderClient(sys.argv[1], sys.argv[2])
