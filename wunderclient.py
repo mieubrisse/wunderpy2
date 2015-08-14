@@ -11,11 +11,19 @@ def _ensure_not_empty(params):
         if value is None or not value.strip():
             raise ValueError('{} cannot be null or empty'.format(pretty_name))
 
-def _validate_response(response):
+def _validate_response(method, response):
     ''' Validates that the response given by Wunderlist is successful, or throw a descriptive error if not '''
     # TODO Fill this out using the error codes here: https://developer.wunderlist.com/documentation/concepts/formats
     if response.status_code >= 400:
         raise ValueError('{} {}'.format(response.status_code, str(response.json())))
+    if method == 'GET':
+        assert response.status_code == 200
+    elif method == 'POST':
+        assert response.status_code == 201
+    elif method == 'PATCH':
+        assert response.status_code == 200
+    elif method == 'DELETE':
+        assert response.status_code == 204
 
 # All times are UTC time
 DATE_FORMAT = '%Y-%m-%d'
@@ -73,7 +81,7 @@ class WunderClient:
             raise wunderpy2.exceptions.TimeoutError(e)
         except requests.exceptions.ConnectionError as e:
             raise wunderpy2.exceptions.ConnectionError(e)
-        _validate_response(response)
+        _validate_response(method, response)
         return response
 
     def get_lists(self):
@@ -106,13 +114,16 @@ class WunderClient:
 
     def get_tasks(self, list_id, completed=False):
         ''' Gets un/completed tasks for the given list ID '''
-        params = { model.Task.list_id : str(list_id), model.Task.completed : completed }
+        params = { 
+                model.Task.list_id : str(list_id), 
+                model.Task.completed : completed 
+                }
         response = self._wunderlist_request(_Endpoints.TASKS, params=params)
         return response.json()
 
     def get_task(self, task_id):
         ''' Gets task information for the given ID '''
-        endpoint = '/'.join([_Endpoints.TASKS, int(task_id)])
+        endpoint = '/'.join([_Endpoints.TASKS, str(task_id)])
         response = self._wunderlist_request(endpoint)
         return response.json()
 
@@ -138,6 +149,7 @@ class WunderClient:
                 }
         data = { key: value for key, value in data.iteritems() if value is not None }
         response = self._wunderlist_request(_Endpoints.TASKS, 'POST', data=data)
+        assert response.status_code == 201
         return response.json()
 
     def update_task(self, task_id, revision, title=None, assignee_id=None, completed=None, recurrence_type=None, recurrence_count=None, due_date=None, starred=None, remove=None):
@@ -162,7 +174,7 @@ class WunderClient:
                 'remove' : remove,
                 }
         data = { key: value for key, value in data.iteritems() if value is not None }
-        endpoint = '/'.join([_Endpoints.TASKS, int(task_id)])
+        endpoint = '/'.join([_Endpoints.TASKS, str(task_id)])
         response = self._wunderlist_request(endpoint, 'PATCH', data=data)
         return response.json()
 
@@ -170,24 +182,54 @@ class WunderClient:
         params = {
                 model.Task.revision : int(revision),
                 }
-        endpoint = '/'.join([_Endpoints.TASKS, int(task_id)])
+        endpoint = '/'.join([_Endpoints.TASKS, str(task_id)])
         response = self._wunderlist_request(endpoint, 'DELETE', params=params)
-        assert response.status_code == 204
 
-    def get_task_notes(self, task_id):
+    def get_task_note(self, task_id):
         params = {
-                model.Task.id : int(task_id)
+                'task_id' : int(task_id)
                 }
         response = self._wunderlist_request(_Endpoints.NOTES, params=params)
+        assert response.status_code == 200
         return response.json()
 
     def get_list_notes(self, list_id):
         params = {
-                model.List.id : int(list_id)
+                'list_id' : int(list_id)
                 }
         response = self._wunderlist_request(_Endpoints.NOTES, params=params)
+        assert response.status_code == 200
         return response.json()
 
+    def get_note(self, note_id):
+        endpoint = '/'.join([_Endpoints.NOTES, str(note_id)])
+        response = self._wunderlist_request(endpoint)
+        return response.json()
+
+    def create_note(self, task_id, content):
+        data = {
+                'task_id' : int(task_id),
+                'content' : content,
+                }
+        response = self._wunderlist_request(_Endpoints.NOTES, method='POST', data=data)
+        return response.json()
+
+    def update_note(self, note_id, revision, content):
+        data = {
+                'revision': int(revision),
+                'content': content,
+                }
+        endpoint = '/'.join([_Endpoints.NOTES, str(note_id)])
+        response = self._wunderlist_request(endpoint, method='PATCH', data=data)
+        return response.json()
+
+    def delete_note(self, note_id, revision):
+        # NOTE There is a bug in the Wunderlist API where this must be called twice in order for the note to actually be deleted - once on the note you want deleted and once on the new, empty, replacement note that gets generated
+        params = {
+                'revision' : revision
+                }
+        endpoint = '/'.join([_Endpoints.NOTES, str(note_id)])
+        response = self._wunderlist_request(endpoint, method='DELETE', params=params)
 
 if __name__ == '__main__':
     client = WunderClient(sys.argv[1], sys.argv[2])

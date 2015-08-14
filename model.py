@@ -1,5 +1,7 @@
 # Represents the Wunderlist data model
 
+# TODO Make all of these variables uppercase, as they're constants!
+
 class _WunderlistObj:
     id = 'id'
     revision = 'revision'
@@ -25,6 +27,12 @@ class Task(_WunderlistObj):
     creation_request_id = 'created_by_request_id'
     recurrence_count = 'recurrence_count'
     recurrence_type = 'recurrence_type'
+
+class Note(_WunderlistObj):
+    TASK_ID = 'task_id'
+    CREATION_REQUEST_ID = 'createdy_by_request_id'
+    TYPE = 'type'   # Always 'note'?
+    CONTENT = 'content'
 
 class ReccurrenceTypes():
     day = 'day'

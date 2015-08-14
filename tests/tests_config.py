@@ -1,42 +1,32 @@
 import yaml
 
-
-# ---- Keys -----
-class _CfgKeys:
-    CLIENT_ID = "client_id"
-    ACCESS_TOKEN = "access_token"
-    CLIENT_SECRET = "client_secret"
-    ENDPOINT_TESTS = "endpoint_tests"
-    TASKS_ENDPOINT = "tasks"
-    LISTS_ENDPOINT = "lists"
-    NOTES_ENDPOINT = "notes"
-    class _EndpointCfgKeys:
-        LIST_ID = "list_id"
-    class TasksEndpointCfgKeys(_EndpointCfgKeys):
-        pass
-    class ListsEndpointCfgKeys(_EndpointCfgKeys):
-        pass
-    class NotesEndpointCfgKeys(_EndpointCfgKeys):
-        pass
-
-
 # ----- Value Extraction ----
 # TODO Let user dynamically set the config file!
 with open("config.yaml") as config_fp:
     _config_obj = yaml.load(config_fp)
 
-INBOX_ID = _config_obj[_CfgKeys.INBOX_ID]
-ACCESS_TOKEN = _config_obj[_CfgKeys.ACCESS_TOKEN]
-CLIENT_ID = _config_obj[_CfgKeys.CLIENT_ID]
+ACCESS_TOKEN = _config_obj["access_token"]
+CLIENT_ID = _config_obj["client_id"]
+CLIENT_SECRET = _config_obj["client_secret"]
 
-_tasks_config_obj = _config_obj[_CfgKeys.TASKS_ENDPOINT]
+
+# ---- Config values for testing endpoints ------
+_endpoint_tests_obj = _config_obj["endpoint_tests"]
+
+# tasks
+_tasks_config_obj = _endpoint_tests_obj["tasks"]
 class TasksEndpointCfgValues:
-    LIST_ID = _tasks_config_obj[_CfgKeys.TasksEndpointCfgKeys.LIST_ID]
+    LIST_ID = _tasks_config_obj["list_id"]
 
-_lists_config_obj = _config_obj[_CfgKeys.LISTS_ENDPOINT]
+# lists
+_lists_config_obj = _endpoint_tests_obj["lists"]
 class ListsEndpointCfgValues:
-    LIST_ID = _lists_config_obj[_CfgKeys.ListsEndpointCfgKeys.LIST_ID]
+    LIST_ID = _lists_config_obj["list_id"]
 
-_notes_config_obj = _config_obj[_CfgKeys.NOTES_ENDPOINT]
+# notes
+_notes_config_obj = _endpoint_tests_obj["notes"]
 class NotesEndpointCfgValues:
-    LIST_ID = _notes_config_obj[_CfgKeys.NotesEndpointCfgKeys.LIST_ID]
+    LIST_ID = _notes_config_obj["list_id"]
+    TASK_ID_WITH_NOTES = _notes_config_obj["task_id_with_notes"]
+    TASK_ID_WITHOUT_NOTES = _notes_config_obj["task_id_without_notes"]
+    NOTE_ID = _notes_config_obj["note_id"]
