@@ -16,8 +16,8 @@ class TestNotesEndpoint(EndpointTestCase):
         # TODO Delete leftover notes here
         pass
 
-    def test_get_task_note(self):
-        self.client.get_task_note(tests_config.NotesEndpointCfgValues.TASK_ID_WITH_NOTES)
+    def test_get_task_notes(self):
+        self.client.get_task_notes(tests_config.NotesEndpointCfgValues.TASK_ID_WITH_NOTES)
 
     def test_get_list_notes(self):
         self.client.get_list_notes(tests_config.NotesEndpointCfgValues.LIST_ID)

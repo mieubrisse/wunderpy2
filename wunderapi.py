@@ -4,6 +4,7 @@ import json
 
 import exceptions as wp_exceptions
 
+ACCESS_TOKEN_URL = 'https://www.wunderlist.com/oauth/access_token'
 DEFAULT_API_URL = 'https://a.wunderlist.com/api'
 DEFAULT_API_VERSION='1'
 
@@ -25,7 +26,7 @@ class WunderApi:
         self.Endpoints = _Endpoints
 
     def _validate_response(self, method, response):
-        ''' Validates that the response given by Wunderlist is successful, or throw a descriptive error if not '''
+        ''' Helper method to validate the given to a Wunderlist API request is as expected '''
         # TODO Fill this out using the error codes here: https://developer.wunderlist.com/documentation/concepts/formats
         # The expected results can change based on API version, so validate this here
         if self.api_version:
@@ -42,11 +43,21 @@ class WunderApi:
 
     def request(self, endpoint, method='GET', headers=None, params=None, data=None):
         '''
-        Helper to form a request to the Wunderlist API
+        Send a request to the given Wunderlist API endpoint
 
-        method -- GET, PUT, PATCH, etc.
-        url_fragment -- trailing portion URL to be appended after the API version
+        Params:
+        endpoint -- API endpoint to send request to
+
+        Keyword Args:
+        headers -- headers to add to the request
+        method -- GET, PUT, PATCH, DELETE, etc.
+        params -- parameters to encode in the request
+        data -- data to send with the request
         '''
+        if not headers:
+            headers = {}
+        if method in ['POST', 'PATCH', 'PUT']:
+            headers['Content-Type'] = 'application/json'
         url = '/'.join([self.api_url, 'v' + self.api_version, endpoint])
         data = json.dumps(data) if data else None
         try:
@@ -59,8 +70,27 @@ class WunderApi:
         self._validate_response(method, response)
         return response
 
-    def get_access_token(self, temporary_code, client_id, client_secret):
-        pass
+    def get_access_token(self, code, client_id, client_secret):
+        ''' 
+        Exchange a temporary code for an access token allowing access to a user's account
+
+        See https://developer.wunderlist.com/documentation/concepts/authorization for more info
+        '''
+        headers = {
+                'Content-Type' : 'application/json'
+                }
+        data = {
+                'client_id' : client_id,
+                'client_secret' : client_secret,
+                'code' : code,
+                }
+        str_data = json.dumps(data)
+        response = requests.request(method='POST', url=ACCESS_TOKEN_URL, headers=headers, data=str_data)
+        status_code = response.status_code
+        if status_code != 200:
+            raise ValueError("{} -- {}".format(status_code, response.json()))
+        return body['access_token']
 
     def get_client(self, access_token, client_id):
+        ''' Gets a client with the given access token and ID pointing to this API '''
         return wunderclient.WunderClient(access_token, client_id, self)
