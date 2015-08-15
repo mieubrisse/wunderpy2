@@ -3,31 +3,31 @@
 # TODO Make all of these variables uppercase, as they're constants!
 
 class _WunderlistObj:
-    id = 'id'
-    revision = 'revision'
+    ID = 'id'
+    REVISION = 'revision'
 
 class List(_WunderlistObj):
     ''' POPO to contain list JSON keys '''
-    title = 'title'
-    creation_timestamp = 'created_at'
-    type = 'list_type'
-    public = 'public'
+    TITLE = 'title'
+    CREATION_TIMESTAMP = 'created_at'
+    TYPE = 'list_type'
+    PUBLIC = 'public'
 
 class Task(_WunderlistObj):
     ''' POPO to contain task JSON keys '''
-    assignee_id = 'assignee_id'
-    assigner_id = 'assigner_id'
-    creation_timestamp = 'created_at'
-    creator_id = 'created_by_id'
-    due_date = 'due_date'
-    list_id = 'list_id'
-    starred = 'starred'  # boolean
-    title = 'title'
-    type = 'type'
-    completed = 'completed' # boolean
-    creation_request_id = 'created_by_request_id'
-    recurrence_count = 'recurrence_count'
-    recurrence_type = 'recurrence_type'
+    ASSIGNEE_ID = 'assignee_id'
+    ASSIGNER_ID = 'assigner_id'
+    CREATION_TIMESTAMP = 'created_at'
+    CREATOR_ID = 'created_by_id'
+    DUE_DATE = 'due_date'
+    LIST_ID = 'list_id'
+    STARRED = 'starred'  # boolean
+    TITLE = 'title'
+    TYPE = 'type'
+    COMPLETED = 'completed' # boolean
+    CREATION_REQUEST_ID = 'created_by_request_id'
+    RECURRENCE_COUNT = 'recurrence_count'
+    RECURRENCE_TYPE = 'recurrence_type'
 
 class Note(_WunderlistObj):
     TASK_ID = 'task_id'
@@ -36,7 +36,7 @@ class Note(_WunderlistObj):
     CONTENT = 'content'
 
 class ReccurrenceTypes():
-    day = 'day'
-    week = 'week'
-    month = 'month'
-    year= 'year'
+    DAY = 'day'
+    WEEK = 'week'
+    MONTH = 'month'
+    YEAR= 'year'

@@ -4,8 +4,8 @@ Encapsulates all tasks that can be run against the 'tasks' endpoint
 def get_tasks(client, list_id, completed=False):
     ''' Gets un/completed tasks for the given list ID '''
     params = { 
-            wp_model.Task.list_id : str(list_id), 
-            wp_model.Task.completed : completed 
+            'list_id' : str(list_id), 
+            'completed' : completed 
             }
     response = client.authenticated_request(client.api.Endpoints.TASKS, params=params)
     return response.json()
@@ -27,14 +27,14 @@ def create_task(client, list_id, title, assignee_id=None, completed=None, recurr
     if (recurrence_type is None and recurrence_count is not None) or (recurrence_type is not None and recurrence_count is None):
         raise ValueError("recurrence_type and recurrence_count are required are required together")
     data = {
-            wp_model.Task.list_id : int(list_id) if list_id else None,
-            wp_model.Task.title : title,
-            wp_model.Task.assignee_id : int(assignee_id) if assignee_id else None,
-            wp_model.Task.completed : completed,
-            wp_model.Task.recurrence_type : recurrence_type,
-            wp_model.Task.recurrence_count : int(recurrence_count) if recurrence_count else None,
-            wp_model.Task.due_date : due_date,
-            wp_model.Task.starred : starred,
+            'list_id' : int(list_id) if list_id else None,
+            'title' : title,
+            'assignee_id' : int(assignee_id) if assignee_id else None,
+            'completed' : completed,
+            'recurrence_type' : recurrence_type,
+            'recurrence_count' : int(recurrence_count) if recurrence_count else None,
+            'due_date' : due_date,
+            'starred' : starred,
             }
     data = { key: value for key, value in data.iteritems() if value is not None }
     response = client.authenticated_request(client.api.Endpoints.TASKS, 'POST', data=data)
@@ -52,14 +52,14 @@ def update_task(client, task_id, revision, title=None, assignee_id=None, complet
     if (recurrence_type is None and recurrence_count is not None) or (recurrence_type is not None and recurrence_count is None):
         raise ValueError("recurrence_type and recurrence_count are required are required together")
     data = {
-            wp_model.Task.title : title,
-            wp_model.Task.assignee_id : int(assignee_id) if assignee_id else None,
-            wp_model.Task.completed : completed,
-            wp_model.Task.recurrence_type : recurrence_type,
-            wp_model.Task.recurrence_count : int(recurrence_count) if recurrence_count else None,
-            wp_model.Task.due_date : due_date,
-            wp_model.Task.starred : starred,
-            wp_model.Task.revision : int(revision),
+            'revision' : int(revision),
+            'title' : title,
+            'assignee_id' : int(assignee_id) if assignee_id else None,
+            'completed' : completed,
+            'recurrence_type' : recurrence_type,
+            'recurrence_count' : int(recurrence_count) if recurrence_count else None,
+            'due_date' : due_date,
+            'starred' : starred,
             'remove' : remove,
             }
     data = { key: value for key, value in data.iteritems() if value is not None }
@@ -69,7 +69,7 @@ def update_task(client, task_id, revision, title=None, assignee_id=None, complet
 
 def delete_task(client, task_id, revision):
     params = {
-            wp_model.Task.revision : int(revision),
+            'revision' : int(revision),
             }
     endpoint = '/'.join([client.api.Endpoints.TASKS, str(task_id)])
     client.authenticated_request(endpoint, 'DELETE', params=params)
