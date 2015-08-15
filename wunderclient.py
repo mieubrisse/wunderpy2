@@ -30,6 +30,7 @@ DATE_FORMAT = '%Y-%m-%d'
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 API_URL = 'https://a.wunderlist.com/api'
 MAX_TASK_TITLE_LENGTH = 255
+MAX_LIST_TITLE_LENGTH = 255
 
 class _Endpoints:
     TASKS = "tasks"
@@ -87,7 +88,6 @@ class WunderClient:
     def get_lists(self):
         ''' Gets all the client's lists '''
         response = self._wunderlist_request(_Endpoints.LISTS)
-        assert response.status_code == 200
         return response.json()
 
     def get_list(self, list_id):
@@ -97,20 +97,39 @@ class WunderClient:
         return response.json()
 
     def create_list(self, title):
-        # TODO https://developer.wunderlist.com/documentation/endpoints/list
-        pass
+        ''' Creates a new list with the given title '''
+        if len(title) > MAX_LIST_TITLE_LENGTH:
+            raise ValueError("Title cannot be longer than {} characters".format(MAX_LIST_TITLE_LENGTH))
+        data = {
+                'title' : title,
+                }
+        response = self._wunderlist_request(_Endpoints.LISTS, method='POST', data=data)
+        return response.json()
 
-    def update_list(self, new_list_obj, revision):
-        # TODO https://developer.wunderlist.com/documentation/endpoints/list
-        pass
+    def update_list(self, list_id, revision, title=None, public=None):
+        '''
+        Updates the list with the given ID to have the given properties
 
-    def make_list_public(self, list_id, revision):
-        # TODO https://developer.wunderlist.com/documentation/endpoints/list
-        pass
+        See https://developer.wunderlist.com/documentation/endpoints/list for detailed parameter information
+        '''
+        if len(title) > MAX_LIST_TITLE_LENGTH:
+            raise ValueError("Title cannot be longer than {} characters".format(MAX_LIST_TITLE_LENGTH))
+        data = {
+                'revision' : revision,
+                'title' : title,
+                'public' : public,
+                }
+        data = { key: value for key, value in data.iteritems() if value is not None }
+        endpoint = '/'.join([_Endpoints.LISTS, str(list_id)])
+        response = self._wunderlist_request(endpoint, 'PATCH', data=data)
+        return response.json()
 
     def delete_list(self, list_id, revision):
-        # TODO https://developer.wunderlist.com/documentation/endpoints/list
-        pass
+        params = {
+                'revision' : int(revision),
+                }
+        endpoint = '/'.join([_Endpoints.LISTS, str(list_id)])
+        self._wunderlist_request(endpoint, 'DELETE', params=params)
 
     def get_tasks(self, list_id, completed=False):
         ''' Gets un/completed tasks for the given list ID '''
@@ -183,7 +202,7 @@ class WunderClient:
                 model.Task.revision : int(revision),
                 }
         endpoint = '/'.join([_Endpoints.TASKS, str(task_id)])
-        response = self._wunderlist_request(endpoint, 'DELETE', params=params)
+        self._wunderlist_request(endpoint, 'DELETE', params=params)
 
     def get_task_note(self, task_id):
         params = {

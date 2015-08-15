@@ -11,6 +11,7 @@ class List(_WunderlistObj):
     title = 'title'
     creation_timestamp = 'created_at'
     type = 'list_type'
+    public = 'public'
 
 class Task(_WunderlistObj):
     ''' POPO to contain task JSON keys '''
