@@ -30,5 +30,3 @@ These choices were made intentionally, so as to give developers full control and
     * Upload
     * User
     * Webhooks?
-* Finish implementing the following endpoints:
-    * 
