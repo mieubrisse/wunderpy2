@@ -2,7 +2,7 @@ import yaml
 
 # ----- Value Extraction ----
 # TODO Let user dynamically set the config file!
-with open("config.yaml") as config_fp:
+with open("tests_config.yaml") as config_fp:
     _config_obj = yaml.load(config_fp)
 
 ACCESS_TOKEN = _config_obj["access_token"]
