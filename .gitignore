@@ -1,2 +1,6 @@
 *.yaml
 *.yml
+*.py[ocd]
+build
+dist
+*egg-info
