@@ -13,3 +13,5 @@ class ConnectionError(_WunderlistError):
 
 class TimeoutError(_WunderlistError):
     pass
+
+# TODO Add exceptions for bad request and not found

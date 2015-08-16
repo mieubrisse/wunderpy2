@@ -1,13 +1,20 @@
 from setuptools import setup, find_packages
 from codecs import open
-from os import path
+import os.path
+import sys
 
-script_dir = path.abspath(path.dirname(__file__))
+script_dir = os.path.abspath(os.path.dirname(__file__))
 
 def read(*paths):
     """Build a file path from *paths* and return the contents."""
     with open(os.path.join(*paths), 'r') as f:
         return f.read()
+
+# argparse is only a builtin in 2.7
+# I don't plan to support 2.6, but just in case I do in the future
+install_requires = ['requests']
+if sys.hexversion < 0x02070000:
+    install_requires.append('argparse')
 
 setup(
     name='wunderpy2',
@@ -37,5 +44,5 @@ setup(
     ],
     keywords='wunderpy wunderpy2 wunderlist api cli',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    install_requires=['argparse>=1.3.0','requests>=2.7.0'],
+    install_requires=install_requires,
 )
