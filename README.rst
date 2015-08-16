@@ -9,7 +9,6 @@ These choices were made intentionally, so as to avoid getting mired in fancy fea
 
 Installation
 ============
-**TODO** Actually put this package on PyPI :|
 ::
 
     pip install wunderpy2
@@ -31,7 +30,6 @@ If you want other Wunderlisters to use your application, you'll need to see the 
 
 TODO 
 ====
-* Put on PyPI
 * Implement the following endpoints:
     * Avatar
     * File
