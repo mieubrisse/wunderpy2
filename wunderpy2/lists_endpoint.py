@@ -1,6 +1,10 @@
 '''
 Encapsulates all tasks that can be run against the 'lists' endpoint
 '''
+def _check_title_length(title, api):
+    ''' Checks the given title against the given API specifications to ensure it's short enough '''
+    if len(title) > api.MAX_LIST_TITLE_LENGTH:
+        raise ValueError("Title cannot be longer than {} characters".format(api.MAX_TASK_TITLE_LENGTH))
 
 def get_lists(client):
     ''' Gets all the client's lists '''
@@ -15,8 +19,7 @@ def get_list(client, list_id):
 
 def create_list(client, title):
     ''' Creates a new list with the given title '''
-    if len(title) > client.api.MAX_LIST_TITLE_LENGTH:
-        raise ValueError("Title cannot be longer than {} characters".format(client.api.MAX_LIST_TITLE_LENGTH))
+    _check_title_length(title, client.api)
     data = {
             'title' : title,
             }
@@ -29,8 +32,8 @@ def update_list(client, list_id, revision, title=None, public=None):
 
     See https://developer.wunderlist.com/documentation/endpoints/list for detailed parameter information
     '''
-    if len(title) > client.api.MAX_LIST_TITLE_LENGTH:
-        raise ValueError("Title cannot be longer than {} characters".format(client.api.MAX_LIST_TITLE_LENGTH))
+    if title is not None:
+        _check_title_length(title, client.api)
     data = {
             'revision' : revision,
             'title' : title,

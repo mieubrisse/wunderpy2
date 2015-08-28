@@ -6,6 +6,8 @@ import model as wp_model
 import lists_endpoint
 import tasks_endpoint
 import notes_endpoint
+import subtasks_endpoint
+import positions_endpoint
 
 class WunderClient:
     # TODO Factor our these methods into subclasses, for easier logical organization
@@ -26,7 +28,7 @@ class WunderClient:
 
     def authenticated_request(self, endpoint, method='GET', params=None, data=None):
         '''
-        Send a request to the given Wunderlist API with 'X-Access-Token' and 'X-Client-ID' headers
+        Send a request to the given Wunderlist API with 'X-Access-Token' and 'X-Client-ID' headers and ensure the response code is as expected given the request type
 
         Params:
         endpoint -- API endpoint to send request to
@@ -117,3 +119,39 @@ class WunderClient:
         NOTE: There is a bug/feature with the API where calling this once will delete the task's note, but then replace it with a new, empty note for the task. To truly delete a task's notes, you must get the note ID of the new, empty note and call this function again on it
         '''
         notes_endpoint.delete_note(self, note_id, revision)
+
+    def get_task_subtasks(self, task_id, completed=False):
+        ''' Gets subtasks for task with given ID '''
+        return subtasks_endpoint.get_task_subtasks(self, task_id, completed=completed)
+
+    def get_list_subtasks(self, list_id, completed=False):
+        ''' Gets subtasks for the list with given ID '''
+        return subtasks_endpoint.get_list_subtasks(self, list_id, completed=completed)
+
+    def get_subtask(self, subtask_id):
+        ''' Gets the subtask with the given ID '''
+        return subtasks_endpoint.get_subtask(self, subtask_id)
+
+    def create_subtask(self, task_id, title, completed=False):
+        ''' 
+        Creates a subtask with the given title under the task with the given ID 
+        
+        Return:
+        Newly-created subtask
+        '''
+        return subtasks_endpoint.create_subtask(self, task_id, title, completed=completed)
+
+    def update_subtask(self, subtask_id, revision, title=None, completed=None):
+        '''
+        Updates the subtask with the given ID
+
+        See https://developer.wunderlist.com/documentation/endpoints/subtask for detailed parameter information
+
+        Returns:
+        Subtask with given ID with properties and revision updated
+        '''
+        return subtasks_endpoint.update_subtask(self, subtask_id, revision, title=title, completed=completed)
+
+    def delete_subtask(self, subtask_id, revision):
+        ''' Deletes the subtask with the given ID '''
+        subtasks_endpoint.delete_subtask(self, subtask_id, revision)
