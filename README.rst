@@ -34,6 +34,7 @@ All Wunderlist objects are merely Python objects with special keys. For convenie
 Examples
 --------
 Creating a task with a due date, note, 'starred' flag, and subtask::
+
     lists = client.get_lists()
     list = lists[0]
     task = client.create_task(1234, "My new task", due_date="2015-08-02", starred=True)
@@ -41,6 +42,7 @@ Creating a task with a due date, note, 'starred' flag, and subtask::
     client.create_subtask(task[wunderpy2.Task.ID], "My subtask")
 
 Shuffling the order of tasks within a list (see `the Positions endpoint documentation <https://developer.wunderlist.com/documentation/endpoints/positions>`_)::
+
     import random
     task_positions_obj = client.get_task_positions_obj(list[wunderpy2.List.ID])
     ordering = task_positions_obj[wunderpy2.Task.VALUES]
@@ -49,7 +51,7 @@ Shuffling the order of tasks within a list (see `the Positions endpoint document
 
 TODO 
 ====
-* Implement the following endpoints:
+* Endpoint implementation:
     * Avatar
     * File
     * File preview
