@@ -10,7 +10,7 @@ def _check_title_length(title, api):
 def get_task_subtasks(client, task_id, completed=False):
     ''' Gets subtasks for task with given ID '''
     params = {
-            'task_id' : task_id,
+            'task_id' : int(task_id),
             'completed' : completed,
             }
     response = client.authenticated_request(client.api.Endpoints.SUBTASKS, params=params)

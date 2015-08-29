@@ -42,6 +42,20 @@ class Subtask(_WunderlistEntity):
     COMPLETED = 'completed'
     TYPE = 'type'
 
+# NOTE Wunderlist automatically creates positions objects, so they don't have creation information
+class _PositionsObj(_WunderlistObj):
+    VALUES = 'values'
+    TYPE = 'type'
+
+class ListPositionsObj(_PositionsObj):
+    pass
+
+class TaskPositionsObj(_PositionsObj):
+    LIST_ID = 'list_id'
+
+class SubtaskPositionsObj(_PositionsObj):
+    TASK_ID = 'task_id'
+
 class Note(_WunderlistObj):
     # NOTE Notes don't seem to get any creation info: user, timestamp, or request 
     TASK_ID = 'task_id'

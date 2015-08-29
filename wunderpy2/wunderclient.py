@@ -7,7 +7,7 @@ import lists_endpoint
 import tasks_endpoint
 import notes_endpoint
 import subtasks_endpoint
-import positions_endpoint
+import positions_endpoints
 
 class WunderClient:
     # TODO Factor our these methods into subclasses, for easier logical organization
@@ -89,7 +89,12 @@ class WunderClient:
         tasks_endpoint.delete_task(self, task_id, revision)
 
     def get_task_notes(self, task_id):
-        ''' Gets all notes for the task with the given ID '''
+        ''' 
+        Gets all notes for the task with the given ID. There will be at most one object in this list; tasks may not have more than one note.
+
+        Returns:
+        A list containing one or none Note-mapped objects
+        '''
         return notes_endpoint.get_task_notes(self, task_id)
 
     def get_list_notes(self, list_id):
@@ -104,7 +109,7 @@ class WunderClient:
         ''' 
         Creates a new note for the task with the given ID
 
-        NOTE: Fails if a note already exists
+        NOTE: A task may have at most one note, so this will fail if a note already exists.
         '''
         return notes_endpoint.create_note(self, task_id, content)
 
@@ -116,7 +121,7 @@ class WunderClient:
         '''
         Deletes the note with the given ID
 
-        NOTE: There is a bug/feature with the API where calling this once will delete the task's note, but then replace it with a new, empty note for the task. To truly delete a task's notes, you must get the note ID of the new, empty note and call this function again on it
+        NOTE: There is a bug/feature with the API where calling this once will delete the task's note, but then replace it with a new, empty note for the task. To truly delete a task's notes, you must get the note ID of the new, empty note and call this function again on it!
         '''
         notes_endpoint.delete_note(self, note_id, revision)
 
@@ -155,3 +160,112 @@ class WunderClient:
     def delete_subtask(self, subtask_id, revision):
         ''' Deletes the subtask with the given ID '''
         subtasks_endpoint.delete_subtask(self, subtask_id, revision)
+
+    def get_list_positions_objs(self):
+        '''
+        Gets a list containing the object that encapsulates information about the order lists are laid out in. This list will always contain exactly one object.
+
+        See https://developer.wunderlist.com/documentation/endpoints/positions for more info
+
+        Return:
+        A list containing a single ListPositionsObj-mapped object
+        '''
+        return positions_endpoints.get_list_positions_objs(self)
+
+    def get_list_positions_obj(self, positions_obj_id):
+        '''
+        Gets the object that defines how lists are ordered (there is only one of these)
+
+        See https://developer.wunderlist.com/documentation/endpoints/positions for more info
+
+        Return:
+        A ListPositionsObj-mapped object defining the order of list layout
+        '''
+        return positions_endpoints.get_list_positions_obj(self, positions_obj_id)
+
+    def update_list_positions_obj(self, positions_obj_id, revision, values):
+        '''
+        Updates the ordering of lists to have the given value. The given ID and revision should match the singleton object defining how lists are laid out.
+
+        See https://developer.wunderlist.com/documentation/endpoints/positions for more info
+
+        Return:
+        The updated ListPositionsObj-mapped object defining the order of list layout
+        '''
+        return positions_endpoints.update_list_positions_obj(self, positions_obj_id, revision, values)
+
+    def get_task_positions_objs(self, list_id):
+        '''
+        Gets a list containing the object that controls the order tasks within the list with the given ID are laid out in.  This list will always contain exactly one object, as each list has only one task ordering.
+
+        See https://developer.wunderlist.com/documentation/endpoints/positions for more info
+
+        Return:
+        A list containing a single TaskPositionsObj-mapped object
+        '''
+        return positions_endpoints.get_task_positions_objs(self, list_id)
+
+    def get_task_positions_obj(self, positions_obj_id):
+        '''
+        Gets the object that defines how tasks are ordered within a list (there is one of these per list)
+
+        See https://developer.wunderlist.com/documentation/endpoints/positions for more info
+
+        Return:
+        A TaskPositionsObj-mapped object defining the order of list layout
+        '''
+        return positions_endpoints.get_task_positions_obj(self, positions_obj_id)
+
+    def update_task_positions_obj(self, positions_obj_id, revision, values):
+        '''
+        Updates the ordering of tasks in the positions object with the given ID to the ordering in the given values.
+
+        See https://developer.wunderlist.com/documentation/endpoints/positions for more info
+
+        Return:
+        The updated TaskPositionsObj-mapped object defining the order of list layout
+        '''
+        return positions_endpoints.update_task_positions_obj(self, positions_obj_id, revision, values)
+
+    def get_task_subtask_positions_objs(self, task_id):
+        '''
+        Gets a list containing the object that controls the order subtasks within the task with the given ID are laid out in.  This list will always contain exactly one object, as each task has only one subtask ordering.
+
+        See https://developer.wunderlist.com/documentation/endpoints/positions for more info
+
+        Return:
+        A list containing a single SubtaskPositionsObj-mapped object
+        '''
+        return positions_endpoints.get_task_subtask_positions_objs(self, task_id)
+
+    def get_list_subtask_positions_objs(self, list_id):
+        '''
+        Gets all subtask positions objects for the tasks within a given list. This is a convenience method avoid needing to get all the list's tasks before getting subtasks.
+
+        Returns:
+        List of SubtaskPositionsObj-mapped objects representing the order of subtasks for the tasks within the given list
+        '''
+        return positions_endpoints.get_list_subtask_positions_objs(self, list_id)
+
+    def get_subtask_positions_obj(self, positions_obj_id):
+        '''
+        Gets the object that defines how subtasks are ordered within a task (there is one of these per task)
+
+        See https://developer.wunderlist.com/documentation/endpoints/positions for more info
+
+        Return:
+        A SubtaskPositionsObj-mapped object defining the order of subtask layout
+        '''
+        return positions_endpoints.get_subtask_positions_obj(self, positions_obj_id)
+
+    def update_subtask_positions_obj(self, positions_obj_id, revision, values):
+        '''
+        Updates the ordering of subtasks in the positions object with the given ID to the ordering in the given values.
+
+        See https://developer.wunderlist.com/documentation/endpoints/positions for more info
+
+        Return:
+        The updated SubtaskPositionsObj-mapped object defining the order of list layout
+        '''
+        return positions_endpoints.update_subtask_positions_obj(self, positions_obj_id, revision, values)
+
