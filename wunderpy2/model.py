@@ -1,6 +1,6 @@
 # Represents the Wunderlist data model
 
-# TODO Make these classes that can be instantiated from JSON objects!
+# TODO Potentially make these actual classes and parse the JSON we get back from Wunderlist so we can hand the users classes to work with (intead of dicts)? Looked at the 'colander' module for this, but it didn't really do anything more than's being done right now...
 
 class _WunderlistObj:
     ''' Basic block of all Wunderlist communication '''
