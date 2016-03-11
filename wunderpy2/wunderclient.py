@@ -2,12 +2,12 @@ import requests
 import sys
 import json
 
-import model as wp_model
-import lists_endpoint
-import tasks_endpoint
-import notes_endpoint
-import subtasks_endpoint
-import positions_endpoints
+from . import model as wp_model
+from . import lists_endpoint
+from . import tasks_endpoint
+from . import notes_endpoint
+from . import subtasks_endpoint
+from . import positions_endpoints
 
 class WunderClient:
     # TODO Factor our these methods into subclasses, for easier logical organization
