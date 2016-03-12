@@ -18,12 +18,12 @@ Getting a client
 Wunderlist uses OAuth2 to allow applications to access users' data, so you'll need to `create an application <https://developer.wunderlist.com/apps>`_ before doing anything. If you only want to access your own Wunderlist, generate an access token after creating your application and use it and the client ID as follows::
 
     import wunderpy2
-    api = wunderpy.WunderApi()
+    api = wunderpy2.WunderApi()
     client = api.get_client(access_token, client_id)    # Fill in your values
 
 If you want other Wunderlisters to use your application, you'll need to see the "Redirect users to request Wunderlist access" section of `the authorization docs <https://developer.wunderlist.com/documentation/concepts/authorization>`_ in order to get a temporary code when a user has authorized your app. Once you have the code, you only need one more step::
 
-    api = wunderpy.WunderApi()
+    api = wunderpy2.WunderApi()
     access_token = api.get_access_token(temporary_code, client_id, client_secret)   # Fill in your values here
     client = api.get_client(access_token, client_id)    # Fill in your client ID
 

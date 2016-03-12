@@ -4,7 +4,7 @@ Encapsulates all tasks that can be run against the 'positions' endpoint
 In my unprofessional opinion, this API could use some reworking: positions objects seem to be singletons, but you can get lists of them for some reason
 '''
 
-import endpoint_helpers
+from . import endpoint_helpers
 
 def _update_positions_obj(client, endpoint, positions_obj_id, revision, values):
     data = {

@@ -2,12 +2,12 @@ import requests
 import sys
 import json
 
-import model as wp_model
-import lists_endpoint
-import tasks_endpoint
-import notes_endpoint
-import subtasks_endpoint
-import positions_endpoints
+from . import model as wp_model
+from . import lists_endpoint
+from . import tasks_endpoint
+from . import notes_endpoint
+from . import subtasks_endpoint
+from . import positions_endpoints
 
 class WunderClient:
     # TODO Factor our these methods into subclasses, for easier logical organization
@@ -121,7 +121,9 @@ class WunderClient:
         '''
         Deletes the note with the given ID
 
-        NOTE: There is a bug/feature with the API where calling this once will delete the task's note, but then replace it with a new, empty note for the task. To truly delete a task's notes, you must get the note ID of the new, empty note and call this function again on it!
+        NOTE: There is a bug with the API where calling this once will delete the task's note, but then replace it with a new, empty note for the task. To truly delete a task's notes, you must get the note ID of the new, empty note and call this function again on it!
+
+        See https://github.com/wunderlist/api/issues/1
         '''
         notes_endpoint.delete_note(self, note_id, revision)
 

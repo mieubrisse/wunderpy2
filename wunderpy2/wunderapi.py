@@ -1,8 +1,8 @@
-import wunderclient
 import requests
 import json
 
-import exceptions as wp_exceptions
+from . import wunderclient
+from . import exceptions as wp_exceptions
 
 ACCESS_TOKEN_URL = 'https://www.wunderlist.com/oauth/access_token'
 DEFAULT_API_URL = 'https://a.wunderlist.com/api'
