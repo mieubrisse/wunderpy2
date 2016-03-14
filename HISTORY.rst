@@ -1,6 +1,14 @@
 Release History
 ===============
 
+0.1.4 (2016/03/14)
+------------------
+* Bugfix in task endpoint code
+
+0.1.3 (2016/03/12)
+------------------
+* Fix imports for Python 3
+
 0.1.2 (2015/10/31)
 ------------------
 * Added 'position' endpoint
