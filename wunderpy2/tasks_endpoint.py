@@ -40,7 +40,7 @@ def create_task(client, list_id, title, assignee_id=None, completed=None, recurr
     if (recurrence_type is None and recurrence_count is not None) or (recurrence_type is not None and recurrence_count is None):
         raise ValueError("recurrence_type and recurrence_count are required are required together")
     if due_date is not None:
-        _check_date_format(due_date, api)
+        _check_date_format(due_date, client.api)
     data = {
             'list_id' : int(list_id) if list_id else None,
             'title' : title,
@@ -66,7 +66,7 @@ def update_task(client, task_id, revision, title=None, assignee_id=None, complet
     if (recurrence_type is None and recurrence_count is not None) or (recurrence_type is not None and recurrence_count is None):
         raise ValueError("recurrence_type and recurrence_count are required are required together")
     if due_date is not None:
-        _check_date_format(due_date, api)
+        _check_date_format(due_date, client.api)
     data = {
             'revision' : int(revision),
             'title' : title,
