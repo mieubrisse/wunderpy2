@@ -70,7 +70,7 @@ def update_task_positions_obj(client, positions_obj_id, revision, values):
 
 def get_task_subtask_positions_objs(client, task_id):
     '''
-    Gets a list of a single 
+    Gets a list of the positions of a single task's subtasks
 
     Each task should (will?) only have one positions object defining how its subtasks are laid out
     '''
