@@ -4,6 +4,7 @@ Release History
 TBA
 ---
 * Switch from `dict.iteritems()` to `dict.items()` for Python 2 & 3 compatibility
+* Expose a few more classes in the public-facing API
 
 0.1.4 (2016/03/14)
 ------------------
