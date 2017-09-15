@@ -1,6 +1,10 @@
 Release History
 ===============
 
+TBA
+---
+* Switch from `dict.iteritems()` to `dict.items()` for Python 2 & 3 compatibility
+
 0.1.4 (2016/03/14)
 ------------------
 * Bugfix in task endpoint code
