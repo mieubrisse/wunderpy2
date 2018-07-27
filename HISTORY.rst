@@ -1,6 +1,10 @@
 Release History
 ===============
 
+TBA
+---
+* Fix typo in RecurrenceTypes class name
+
 0.1.5 (2018-07-27)
 ---
 * Switch from `dict.iteritems()` to `dict.items()` for Python 2 & 3 compatibility
