@@ -39,7 +39,7 @@ def update_list(client, list_id, revision, title=None, public=None):
             'title' : title,
             'public' : public,
             }
-    data = { key: value for key, value in data.iteritems() if value is not None }
+    data = { key: value for key, value in data.items() if value is not None }
     endpoint = '/'.join([client.api.Endpoints.LISTS, str(list_id)])
     response = client.authenticated_request(endpoint, 'PATCH', data=data)
     return response.json()

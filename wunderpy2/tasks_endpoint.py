@@ -51,7 +51,7 @@ def create_task(client, list_id, title, assignee_id=None, completed=None, recurr
             'due_date' : due_date,
             'starred' : starred,
             }
-    data = { key: value for key, value in data.iteritems() if value is not None }
+    data = { key: value for key, value in data.items() if value is not None }
     response = client.authenticated_request(client.api.Endpoints.TASKS, 'POST', data=data)
     return response.json()
 
@@ -78,7 +78,7 @@ def update_task(client, task_id, revision, title=None, assignee_id=None, complet
             'starred' : starred,
             'remove' : remove,
             }
-    data = { key: value for key, value in data.iteritems() if value is not None }
+    data = { key: value for key, value in data.items() if value is not None }
     endpoint = '/'.join([client.api.Endpoints.TASKS, str(task_id)])
     response = client.authenticated_request(endpoint, 'PATCH', data=data)
     return response.json()
