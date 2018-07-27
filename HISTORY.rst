@@ -1,7 +1,7 @@
 Release History
 ===============
 
-TBA
+0.1.6 (2018-07-27)
 ---
 * Fix typo in RecurrenceTypes class name
 

@@ -18,7 +18,7 @@ if sys.hexversion < 0x02070000:
 
 setup(
     name='wunderpy2',
-    version='0.1.5',
+    version='0.1.6',
     description='A Python library for the Wunderlist 2 REST API',
     # Idea credit of https://hynek.me/articles/sharing-your-labor-of-love-pypi-quick-and-dirty/
     long_description=(read('README.rst') + '\n\n' +
