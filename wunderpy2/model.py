@@ -57,12 +57,12 @@ class SubtaskPositionsObj(_PositionsObj):
     TASK_ID = 'task_id'
 
 class Note(_WunderlistObj):
-    # NOTE Notes don't seem to get any creation info: user, timestamp, or request 
+    # NOTE Notes don't seem to get any creation info: user, timestamp, or request
     TASK_ID = 'task_id'
     TYPE = 'type'   # Always 'note'?
     CONTENT = 'content'
 
-class ReccurrenceTypes():
+class RecurrenceTypes():
     DAY = 'day'
     WEEK = 'week'
     MONTH = 'month'
