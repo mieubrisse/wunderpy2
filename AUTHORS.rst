@@ -2,4 +2,4 @@ wunderpy2 is written and maintained by `mieubrisse <https://github.com/mieubriss
 
 Contributors
 ============
-Nobody yet!
+* `d0ugal <https://github.com/d0ugal>`_
